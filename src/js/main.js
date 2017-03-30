@@ -42,7 +42,7 @@ const app = new Vue({
       noneSelected: false,
       noKey: false,
     },
-    groupId: localStorage.getItem('person-group-id') || Math.round(Math.random() * 10000).toString(2).substring(0, 32), // TODO: Implement better generation method
+    groupId: localStorage.getItem('person-group-id') || Math.round(Math.random() * 10000).toString(2).substring(0, 32), // take key from localStorage or generate a new random binary number
     personList: [], // persons in the personGroup
     detectedFaces: [], // currently detected faces
     selectedPerson: null, // currently selected person (for updating)
