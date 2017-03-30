@@ -10,9 +10,7 @@ This is a project created for a competition to demonstrate the Microsoft Face AP
 * Multiple faces, multiple persons
 * Makes you happier by forcing you to smile (scientifically proven: [source](https://www.scientificamerican.com/article/smile-it-could-make-you-happier/))
 
-
-
-The project was created using ES6, SCSS, Webpack (to transpile ES6 and SCSS) and ESDoc. I only used it to simplify the development, it could have just as well been done without these resources. I have not thoroughly tested compatibility, but it works in relatively up-to-date Google Chrome and Firefox.
+The project was created using ES6, SCSS, Webpack (to transpile ES6 and SCSS) and ESDoc. I only used those to simplify the development, it could have just as well been done without these resources. I have not thoroughly tested compatibility, but it works in relatively up-to-date Google Chrome and Firefox.
 
 ## Getting started
 
@@ -20,7 +18,7 @@ Clone the repository, install node modules (`npm install`) and run `npm start`. 
 
 ## Using the FaceAPI class
 
-The FaceAPI class can be used in any other project. In this project, it is used for a very specific example: identifying a user by their name.
+The FaceAPI class can be used in any other project. Here, it is used for a very specific example: identifying a user by their face to display their name.
 
 If you wanted to, let's say, tag people on a picture (given that the personGroup was already set up) and needed the coordinates for that, you could do the following:
 
