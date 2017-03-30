@@ -1,0 +1,1544 @@
+[
+  {
+    "__docId__": 0,
+    "kind": "file",
+    "name": "js/camera.js",
+    "content": "/**\r\n * provides easy functions to take images, sets up a video and canvas element\r\n */\r\nexport default class Camera {\r\n  /**\r\n   * creates an instance of Camera\r\n   *\r\n   * @param {Object} [mediaOptions={ video: true, audio: false }] - configuration for getUserMedia\r\n   * @param {number} [width=640] - width in pixels for the video element\r\n   */\r\n  constructor(mediaOptions = { video: true, audio: false }, width = 640) {\r\n    const video = document.getElementById('video');\r\n    const canvas = document.getElementById('canvas');\r\n\r\n    navigator.mediaDevices.getUserMedia(mediaOptions)\r\n      .then((stream) => {\r\n        video.srcObject = stream;\r\n        video.addEventListener('canplay', this.setResolution.bind(this), false);\r\n        video.play();\r\n      })\r\n      .catch(err => console.error(err));\r\n\r\n    /** type {number} */\r\n    this.width = width;\r\n    /** type {Object} */\r\n    this.canvas = canvas;\r\n    /** type {Object} */\r\n    this.video = video;\r\n  }\r\n\r\n  /**\r\n   * sets the resolution of both video and canvas element, so that no distortion happens.\r\n   *\r\n   * @return {Object} Object with attributes width and height, calculated.\r\n   */\r\n  setResolution() {\r\n    const { canvas, video, width, setResolution } = this;\r\n    const height = video.videoHeight / (video.videoWidth / width);\r\n\r\n    video.setAttribute('width', width);\r\n    video.setAttribute('height', height);\r\n    canvas.setAttribute('width', width);\r\n    canvas.setAttribute('height', height);\r\n\r\n    video.removeEventListener('canplay', setResolution);\r\n    return { width, height };\r\n  }\r\n\r\n  /**\r\n   * takes an image by drawing the video element's content on the canvas.\r\n   *\r\n   * @return {Object} the canvas element (can be used to access functions such as .toBlob())\r\n   */\r\n  takeImage() {\r\n    const { canvas, video, video: { videoWidth, videoHeight } } = this;\r\n    const context = canvas.getContext('2d');\r\n\r\n    context.drawImage(video, 0, 0, videoWidth, videoHeight);\r\n    return canvas;\r\n  }\r\n}\r\n",
+    "static": true,
+    "longname": "js/camera.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 1,
+    "kind": "class",
+    "name": "Camera",
+    "memberof": "js/camera.js",
+    "static": true,
+    "longname": "js/camera.js~Camera",
+    "access": null,
+    "export": true,
+    "importPath": "sayhello/js/camera.js",
+    "importStyle": "Camera",
+    "description": "provides easy functions to take images, sets up a video and canvas element",
+    "lineNumber": 4,
+    "interface": false
+  },
+  {
+    "__docId__": 2,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "js/camera.js~Camera",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/camera.js~Camera#constructor",
+    "access": null,
+    "description": "creates an instance of Camera",
+    "lineNumber": 11,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "{ video: true, audio: false }",
+        "defaultRaw": "{ video: true, audio: false }",
+        "name": "mediaOptions",
+        "description": "configuration for getUserMedia"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "640",
+        "defaultRaw": 640,
+        "name": "width",
+        "description": "width in pixels for the video element"
+      }
+    ]
+  },
+  {
+    "__docId__": 3,
+    "kind": "member",
+    "name": "width",
+    "memberof": "js/camera.js~Camera",
+    "static": false,
+    "longname": "js/camera.js~Camera#width",
+    "access": null,
+    "description": "type {number}",
+    "lineNumber": 24,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 4,
+    "kind": "member",
+    "name": "canvas",
+    "memberof": "js/camera.js~Camera",
+    "static": false,
+    "longname": "js/camera.js~Camera#canvas",
+    "access": null,
+    "description": "type {Object}",
+    "lineNumber": 26,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 5,
+    "kind": "member",
+    "name": "video",
+    "memberof": "js/camera.js~Camera",
+    "static": false,
+    "longname": "js/camera.js~Camera#video",
+    "access": null,
+    "description": "type {Object}",
+    "lineNumber": 28,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 6,
+    "kind": "method",
+    "name": "setResolution",
+    "memberof": "js/camera.js~Camera",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/camera.js~Camera#setResolution",
+    "access": null,
+    "description": "sets the resolution of both video and canvas element, so that no distortion happens.",
+    "lineNumber": 36,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "Object with attributes width and height, calculated."
+    }
+  },
+  {
+    "__docId__": 7,
+    "kind": "method",
+    "name": "takeImage",
+    "memberof": "js/camera.js~Camera",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/camera.js~Camera#takeImage",
+    "access": null,
+    "description": "takes an image by drawing the video element's content on the canvas.",
+    "lineNumber": 54,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "the canvas element (can be used to access functions such as .toBlob())"
+    }
+  },
+  {
+    "__docId__": 8,
+    "kind": "file",
+    "name": "js/faceapi.js",
+    "content": "/**\r\n * Used for accessing Microsoft's Face API. Written for general use cases,\r\n * not specifically for this application.\r\n *\r\n */\r\nexport default class FaceAPI {\r\n  /**\r\n   * creates an instance of FaceAPI\r\n   *\r\n   * @param {string} key - API key\r\n   */\r\n  constructor(key) {\r\n    /** type {number} */\r\n    this.key = key;\r\n\r\n    // This is done because internally calling functions rebinds \"this\" wrongly.\r\n    this.makeRequest = this.makeRequest.bind(this);\r\n    //this.getPersonGroupOrCreate = this.getPersonGroupOrCreate.bind(this);\r\n    this.getPersonGroup = this.getPersonGroup.bind(this);\r\n    this.createPersonGroup = this.createPersonGroup.bind(this);\r\n  }\r\n\r\n  /** type {string} */\r\n  setKey(key) {\r\n    this.key = key;\r\n  }\r\n\r\n  /**\r\n   * makes a request to the API, used for simplifying.\r\n   *\r\n   * @param {string} endpoint - Endpoint to access in request\r\n   * @param {string} [method='GET'] - Method to use for request, e.g. GET, POST, PUT, etc.\r\n   * @param {Object} [headers={ 'Ocp-Apim-Subscription-Key': this.key, 'Content-Type': 'application/json', Accept: 'application/json' }] - Headers to send\r\n   * @param {boolean} [isImage] - If an image is in the body\r\n   * @return {Object} fetch request or error\r\n   */\r\n  makeRequest(endpoint, method = 'GET', body, headers) {\r\n    return fetch(`https://westus.api.cognitive.microsoft.com/face/v1.0/${endpoint}`, {\r\n      body: headers && headers['Content-Type'] === 'application/octet-stream' ? body : JSON.stringify(body),\r\n      headers: Object.assign({ 'Ocp-Apim-Subscription-Key': this.key, 'Content-Type': 'application/json', Accept: 'application/json' }, headers),\r\n      method,\r\n    }).then(response => response.text())\r\n      .then((response) => {\r\n        // Sometimes, the response body is empty, so response.json() fails. This\r\n        // prevents the error from happening by checking if response.text()\r\n        // returns something proper.\r\n        return response !== null ? JSON.parse(response) : {};\r\n      })\r\n      .then((response) => {\r\n        // Catching the error is halting other parts of the class, notably\r\n        // getPersonGroupOrCreate. So we just log it and continue.\r\n        if (response.error) console.error(response.error);\r\n\r\n        return response;\r\n      });\r\n  }\r\n\r\n  /**\r\n   * fetches a personGroup\r\n   *\r\n   * @param {number} personGroupId\r\n   * @return {Object} fetch request\r\n   */\r\n  getPersonGroup(personGroupId) {\r\n    return this.makeRequest(`persongroups/${personGroupId}`);\r\n  }\r\n\r\n  /**\r\n   * creates a personGroup with name identical to the id.\r\n   *\r\n   * @param {string} personGroupId\r\n   * @return {Object} fetch request\r\n   */\r\n  createPersonGroup(personGroupId) {\r\n    return this.makeRequest(`persongroups/${personGroupId}`, 'PUT', {\r\n      name: personGroupId,\r\n    }).then(response => ({\r\n      personGroupId,\r\n      name: personGroupId,\r\n      newlyCreated: true,\r\n      response,\r\n    }));\r\n  }\r\n\r\n  /**\r\n   * trains a personGroup\r\n   *\r\n   * @param {string} personGroupId\r\n   * @return {Object} fetch request\r\n   */\r\n  trainPersonGroup(personGroupId) {\r\n    return this.makeRequest(`persongroups/${personGroupId}/train`, 'POST');\r\n  }\r\n\r\n  /**\r\n   * checks if personGroup exists and if it doesn't, creates it.\r\n   *\r\n   * @param {string} personGroupId\r\n   * @return {Object} fetch request\r\n   */\r\n  getPersonGroupOrCreate(personGroupId) {\r\n    const { getPersonGroup, createPersonGroup } = this;\r\n\r\n    return getPersonGroup(personGroupId)\r\n      .then((response) => {\r\n        // If there was an error (i.e. the group couldn't be found), try creating it.\r\n        if (response.error) return createPersonGroup(personGroupId);\r\n\r\n        return response;\r\n      });\r\n  }\r\n\r\n  /**\r\n   * create a Person\r\n   *\r\n   * @param {string} personGroupId\r\n   * @param {string} name - Name to display\r\n   * @param {string} [userData] - Secret data\r\n   * @return {Object} fetch request\r\n   */\r\n  createPerson(personGroupId, name, userData) {\r\n    return this.makeRequest(`persongroups/${personGroupId}/persons`, 'POST', {\r\n      name,\r\n      userData,\r\n    }).then(response => ({\r\n      personId: response.personId,\r\n      persistedFaceIds: [],\r\n      name,\r\n      userData,\r\n    }));\r\n  }\r\n\r\n  /**\r\n   * deletes a person\r\n   *\r\n   * @param {string} personGroupId\r\n   * @param {string} personId\r\n   * @return {Object} fetch request\r\n   */\r\n  deletePerson(personGroupId, personId) {\r\n    return this.makeRequest(`persongroups/${personGroupId}/persons/${personId}`, 'DELETE');\r\n  }\r\n\r\n  /**\r\n   * add a PersonFace to a Person\r\n   *\r\n   * @param {string} personGroupId\r\n   * @param {string} personId\r\n   * @param {Object} image\r\n   * @param {Object} faceRectangle\r\n   * @return {Object} fetch request\r\n   */\r\n  addPersonFace(personGroupId, personId, image, faceRectangle) {\r\n    let faceDimensions;\r\n\r\n    if (faceRectangle) {\r\n      const { left, top, width, height } = faceRectangle;\r\n      faceDimensions = `?targetFace=${left},${top},${width},${height}`;\r\n    }\r\n\r\n    return this.makeRequest(`persongroups/${personGroupId}/persons/${personId}/persistedFaces${faceDimensions}`, 'POST', image, {\r\n      'Content-Type': 'application/octet-stream',\r\n    });\r\n  }\r\n\r\n  /**\r\n   * lists all Persons of a PersonGroup\r\n   *\r\n   * @param {string} personGroupId\r\n   * @return {Object} fetch request\r\n   */\r\n  listPersons(personGroupId) {\r\n    return this.makeRequest(`persongroups/${personGroupId}/persons`);\r\n  }\r\n\r\n  /**\r\n   * detects faces in an image\r\n   *\r\n   * @param {blob} image\r\n   * @return {Object} fetch request\r\n   */\r\n  detect(image) {\r\n    let headers;\r\n\r\n    if (image && !image.url) {\r\n      headers = {\r\n        'Content-Type': 'application/octet-stream',\r\n      };\r\n    }\r\n\r\n    return this.makeRequest('detect?returnFaceId=true&returnFaceAttributes=smile', 'POST', image, headers);\r\n  }\r\n\r\n  /**\r\n   * identifies persons from faceIds\r\n   *\r\n   * @param {string} personGroupId\r\n   * @param {string[]} faceIds\r\n   * @return {Object} fetch request\r\n   */\r\n  identify(personGroupId, faceIds) {\r\n    return this.makeRequest('identify', 'POST', {\r\n      personGroupId,\r\n      faceIds,\r\n    });\r\n  }\r\n}\r\n",
+    "static": true,
+    "longname": "js/faceapi.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 9,
+    "kind": "class",
+    "name": "FaceAPI",
+    "memberof": "js/faceapi.js",
+    "static": true,
+    "longname": "js/faceapi.js~FaceAPI",
+    "access": null,
+    "export": true,
+    "importPath": "sayhello/js/faceapi.js",
+    "importStyle": "FaceAPI",
+    "description": "Used for accessing Microsoft's Face API. Written for general use cases,\nnot specifically for this application.",
+    "lineNumber": 6,
+    "interface": false
+  },
+  {
+    "__docId__": 10,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#constructor",
+    "access": null,
+    "description": "creates an instance of FaceAPI",
+    "lineNumber": 12,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "key",
+        "description": "API key"
+      }
+    ]
+  },
+  {
+    "__docId__": 11,
+    "kind": "member",
+    "name": "key",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#key",
+    "access": null,
+    "description": "type {number}",
+    "lineNumber": 14,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 12,
+    "kind": "member",
+    "name": "makeRequest",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#makeRequest",
+    "access": null,
+    "description": null,
+    "lineNumber": 17,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 13,
+    "kind": "member",
+    "name": "getPersonGroup",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#getPersonGroup",
+    "access": null,
+    "description": null,
+    "lineNumber": 19,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 14,
+    "kind": "member",
+    "name": "createPersonGroup",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#createPersonGroup",
+    "access": null,
+    "description": null,
+    "lineNumber": 20,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 15,
+    "kind": "method",
+    "name": "setKey",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#setKey",
+    "access": null,
+    "description": "type {string}",
+    "lineNumber": 24,
+    "params": [
+      {
+        "name": "key",
+        "types": [
+          "*"
+        ]
+      }
+    ]
+  },
+  {
+    "__docId__": 16,
+    "kind": "member",
+    "name": "key",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#key",
+    "access": null,
+    "description": null,
+    "lineNumber": 25,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 17,
+    "kind": "method",
+    "name": "makeRequest",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#makeRequest",
+    "access": null,
+    "description": "makes a request to the API, used for simplifying.",
+    "lineNumber": 37,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "endpoint",
+        "description": "Endpoint to access in request"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "'GET'",
+        "defaultRaw": "'GET'",
+        "name": "method",
+        "description": "Method to use for request, e.g. GET, POST, PUT, etc."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "{ 'Ocp-Apim-Subscription-Key': this.key, 'Content-Type': 'application/json', Accept: 'application/json' }",
+        "defaultRaw": "{ 'Ocp-Apim-Subscription-Key': this.key, 'Content-Type': 'application/json', Accept: 'application/json' }",
+        "name": "headers",
+        "description": "Headers to send"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "isImage",
+        "description": "If an image is in the body"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "fetch request or error"
+    }
+  },
+  {
+    "__docId__": 18,
+    "kind": "method",
+    "name": "getPersonGroup",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#getPersonGroup",
+    "access": null,
+    "description": "fetches a personGroup",
+    "lineNumber": 64,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "personGroupId",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "fetch request"
+    }
+  },
+  {
+    "__docId__": 19,
+    "kind": "method",
+    "name": "createPersonGroup",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#createPersonGroup",
+    "access": null,
+    "description": "creates a personGroup with name identical to the id.",
+    "lineNumber": 74,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "personGroupId",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "fetch request"
+    }
+  },
+  {
+    "__docId__": 20,
+    "kind": "method",
+    "name": "trainPersonGroup",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#trainPersonGroup",
+    "access": null,
+    "description": "trains a personGroup",
+    "lineNumber": 91,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "personGroupId",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "fetch request"
+    }
+  },
+  {
+    "__docId__": 21,
+    "kind": "method",
+    "name": "getPersonGroupOrCreate",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#getPersonGroupOrCreate",
+    "access": null,
+    "description": "checks if personGroup exists and if it doesn't, creates it.",
+    "lineNumber": 101,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "personGroupId",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "fetch request"
+    }
+  },
+  {
+    "__docId__": 22,
+    "kind": "method",
+    "name": "createPerson",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#createPerson",
+    "access": null,
+    "description": "create a Person",
+    "lineNumber": 121,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "personGroupId",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "name",
+        "description": "Name to display"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "userData",
+        "description": "Secret data"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "fetch request"
+    }
+  },
+  {
+    "__docId__": 23,
+    "kind": "method",
+    "name": "deletePerson",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#deletePerson",
+    "access": null,
+    "description": "deletes a person",
+    "lineNumber": 140,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "personGroupId",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "personId",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "fetch request"
+    }
+  },
+  {
+    "__docId__": 24,
+    "kind": "method",
+    "name": "addPersonFace",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#addPersonFace",
+    "access": null,
+    "description": "add a PersonFace to a Person",
+    "lineNumber": 153,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "personGroupId",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "personId",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "image",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "faceRectangle",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "fetch request"
+    }
+  },
+  {
+    "__docId__": 25,
+    "kind": "method",
+    "name": "listPersons",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#listPersons",
+    "access": null,
+    "description": "lists all Persons of a PersonGroup",
+    "lineNumber": 172,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "personGroupId",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "fetch request"
+    }
+  },
+  {
+    "__docId__": 26,
+    "kind": "method",
+    "name": "detect",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#detect",
+    "access": null,
+    "description": "detects faces in an image",
+    "lineNumber": 182,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "blob"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "image",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "fetch request"
+    }
+  },
+  {
+    "__docId__": 27,
+    "kind": "method",
+    "name": "identify",
+    "memberof": "js/faceapi.js~FaceAPI",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "js/faceapi.js~FaceAPI#identify",
+    "access": null,
+    "description": "identifies persons from faceIds",
+    "lineNumber": 201,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "personGroupId",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string[]"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "faceIds",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "fetch request"
+    }
+  },
+  {
+    "__docId__": 28,
+    "kind": "file",
+    "name": "js/main.js",
+    "content": "import Vue from 'vue';\r\nimport Camera from './camera';\r\nimport FaceAPI from './faceapi';\r\n\r\n/*\r\n * This needs to be done so that the styles get compiled.\r\n * Normally I'd use more components, more layouts, etc. and with this you could\r\n * very well separate concerns. It's somewhat useless here.\r\n */\r\nimport styles from '../scss/style.scss';\r\n\r\n// Suppress linter errors\r\nlet faceApi;\r\nlet camera;\r\n\r\n/*\r\n * I'm using the Vue.js framework to dynamically update the front-end values and\r\n * to utilize a simple templating engine.\r\n *\r\n * See index.html for the template. All components could be stored in separate\r\n * files, but I didn't like the way that would have to be structured, so I\r\n * didn't do it.\r\n *\r\n * 'el' is the element used by it.\r\n *\r\n * 'data' is like an application state. Changing it makes Vue update the\r\n * corresponding fields in the HTML template.\r\n *\r\n * 'methods' is an object of functions which can be executed, again, from the\r\n * template.\r\n */\r\nconst app = new Vue({\r\n  el: '#app',\r\n  data: {\r\n    config: {\r\n      key: localStorage.getItem('api-key') || '',\r\n      intervalSpeed: 6000, // the interval's cooldown in milliseconds\r\n    },\r\n    // Possible errors to display status in the front-end\r\n    errors: {\r\n      needTrain: false,\r\n      noneSelected: false,\r\n      noKey: false,\r\n    },\r\n    groupId: localStorage.getItem('person-group-id') || Math.round(Math.random() * 10000).toString(2).substring(0, 32), // TODO: Implement better generation method\r\n    personList: [], // persons in the personGroup\r\n    detectedFaces: [], // currently detected faces\r\n    selectedPerson: null, // currently selected person (for updating)\r\n  },\r\n  methods: {\r\n    // Changes the selected person by index\r\n    setSelectedPerson: (index) => {\r\n      app.errors.noneSelected = false;\r\n      app.selectedPerson = index;\r\n    },\r\n    // Creates a new person based on the front-end form and resets the form\r\n    createPerson: () => {\r\n      faceApi.createPerson(app.groupId, app.$refs.newPersonName.value, null)\r\n        .then(person => app.personList.push(person));\r\n\r\n      app.$refs.newPersonName.value = null;\r\n    },\r\n    // Deletes a person\r\n    deletePerson: (index) => {\r\n      faceApi.deletePerson(app.groupId, app.personList[index].personId);\r\n      app.personList.splice(index, 1);\r\n    },\r\n    // Trains the person group\r\n    trainPersonGroup: () => {\r\n      app.errors.needTrain = false;\r\n      faceApi.trainPersonGroup(app.groupId);\r\n    },\r\n    // Add a face to the selected person\r\n    addFaceToPerson: (faceRectangle) => {\r\n      if (app.selectedPerson === null) return app.errors.noneSelected = true;\r\n      app.errors.noneSelected = false;\r\n      app.errors.needTrain = true;\r\n\r\n      return camera.takeImage().toBlob(blob =>\r\n        faceApi.addPersonFace(app.groupId, app.personList[app.selectedPerson].personId, blob, faceRectangle),\r\n      );\r\n    },\r\n    // Set the API key to the input's value\r\n    setApiKey: (e) => {\r\n      const key = e.target.value;\r\n\r\n      localStorage.setItem('api-key', key);\r\n      faceApi.setKey(key);\r\n\r\n      setupPersonGroup();\r\n    },\r\n  },\r\n});\r\n\r\n/**\r\n * Initialize the FaceAPI class used for accessing Microsoft's API.\r\n * Camera needs to be initialized after Vue.js because it otherwise hijacks the\r\n * video element.\r\n */\r\nfaceApi = new FaceAPI(app.config.key);\r\ncamera = new Camera();\r\n\r\n/**\r\n * Checks whether the key is set.\r\n * This is a very simple error handler, I would've liked to expand it to also\r\n * check for other errors.\r\n */\r\nfunction checkKey() {\r\n  if (app.config.key.length < 6) {\r\n    app.errors.noKey = true;\r\n    return false;\r\n  }\r\n\r\n  app.errors.noKey = false;\r\n  return true;\r\n}\r\n\r\n/**\r\n * Here we're setting up the personGroup.\r\n * I opted to use one personGroup for each user, as we don't need mulitple for\r\n * the use case specified. We save the id in the localStorage for persistence.\r\n * The FaceAPI does support multiple personGroups.\r\n */\r\nfunction setupPersonGroup() {\r\n  if (!checkKey()) return;\r\n\r\n  faceApi.getPersonGroupOrCreate(app.groupId)\r\n    .then((group) => {\r\n      // If there was an error (most often incorrect api key, reset persons)\r\n      if (group.response && group.response.error) {\r\n        app.personList = [];\r\n        return;\r\n      }\r\n\r\n      // save to localStorage\r\n      localStorage.setItem('person-group-id', app.groupId);\r\n\r\n      // If the group is not newly created, fetch all existing persons.\r\n      if (!group.newlyCreated) {\r\n        faceApi.listPersons(app.groupId)\r\n          .then((persons) => {\r\n            app.personList = persons;\r\n          });\r\n      }\r\n    });\r\n}\r\n\r\nsetupPersonGroup();\r\n\r\n/**\r\n * The function detectInImage runs every six seconds, as is restricted by the\r\n * free rate limit (20 requests per minute, this function does two - detect and\r\n * identify).\r\n */\r\nsetTimeout(function detectInImage() {\r\n  if (!checkKey()) {\r\n    setTimeout(detectInImage, app.config.intervalSpeed);\r\n    return;\r\n  }\r\n\r\n  // Take an image and convert it to a POSTable format (blob)\r\n  camera.takeImage().toBlob((blob) => {\r\n    // Send a request to the API to detect the faces\r\n    faceApi.detect(blob).then((resp) => {\r\n      if (resp.error) return [];\r\n\r\n      return resp;\r\n    }).then((faces) => {\r\n      // Identify faces in the detected faces.\r\n      faceApi.identify(app.groupId, faces.map(face => face.faceId))\r\n        .then((response) => {\r\n          // Reset every smiling variable. Smiling doubles as an 'isIdentified' boolean.\r\n          app.personList.forEach((p, i) => delete app.personList[i].smiling);\r\n\r\n          // If there was an error, skip the assigning and return originally detected faces.\r\n          if (response.error) return faces;\r\n\r\n          // Assign the most likely person's name to the face for displaying\r\n          response.forEach((identifiedFace) => {\r\n            // If the API couldn't find anyone, return.\r\n            if (identifiedFace.candidates.length < 1) return;\r\n\r\n            // Find the identified person and then the detected face\r\n            const personIndex = app.personList.findIndex(p =>\r\n              p.personId === identifiedFace.candidates[0].personId);\r\n\r\n            const faceIndex = faces.findIndex(f =>\r\n              f.faceId === identifiedFace.faceId);\r\n\r\n            const person = app.personList[personIndex];\r\n            const face = faces[faceIndex];\r\n\r\n            // If the person couldn't be found, it's likely because it has been\r\n            // deleted before and the API hasn't been retrained.\r\n            if (person) {\r\n              face.identifiedAs = person.name;\r\n              person.smiling = face.faceAttributes.smile;\r\n            } else {\r\n              face.identifiedAs = 'Error. Please train.';\r\n              app.errors.needTrain = true;\r\n            }\r\n          });\r\n\r\n          return faces;\r\n        }).then((detectedFaces) => {\r\n          // Finally, display these faces\r\n          app.detectedFaces = detectedFaces;\r\n          // Repeat after 6 seconds, see comment above the initial declaration\r\n          setTimeout(detectInImage, app.config.intervalSpeed);\r\n        });\r\n    });\r\n  });\r\n}, app.config.intervalSpeed);\r\n",
+    "static": true,
+    "longname": "js/main.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 29,
+    "kind": "variable",
+    "name": "app",
+    "memberof": "js/main.js",
+    "static": true,
+    "longname": "js/main.js~app",
+    "access": null,
+    "export": false,
+    "importPath": "sayhello/js/main.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 32,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "vue~Vue"
+      ]
+    }
+  },
+  {
+    "__docId__": 30,
+    "kind": "function",
+    "name": "checkKey",
+    "memberof": "js/main.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "js/main.js~checkKey",
+    "access": null,
+    "export": false,
+    "importPath": "sayhello/js/main.js",
+    "importStyle": null,
+    "description": "Checks whether the key is set.\nThis is a very simple error handler, I would've liked to expand it to also\ncheck for other errors.",
+    "lineNumber": 108,
+    "params": [],
+    "return": {
+      "types": [
+        "boolean"
+      ]
+    }
+  },
+  {
+    "__docId__": 31,
+    "kind": "function",
+    "name": "setupPersonGroup",
+    "memberof": "js/main.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "js/main.js~setupPersonGroup",
+    "access": null,
+    "export": false,
+    "importPath": "sayhello/js/main.js",
+    "importStyle": null,
+    "description": "Here we're setting up the personGroup.\nI opted to use one personGroup for each user, as we don't need mulitple for\nthe use case specified. We save the id in the localStorage for persistence.\nThe FaceAPI does support multiple personGroups.",
+    "lineNumber": 124,
+    "params": []
+  },
+  {
+    "__docId__": 33,
+    "kind": "external",
+    "name": "Infinity",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Infinity",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 34,
+    "kind": "external",
+    "name": "NaN",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~NaN",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 35,
+    "kind": "external",
+    "name": "undefined",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~undefined",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 36,
+    "kind": "external",
+    "name": "null",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~null",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 37,
+    "kind": "external",
+    "name": "Object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 38,
+    "kind": "external",
+    "name": "object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 39,
+    "kind": "external",
+    "name": "Function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 40,
+    "kind": "external",
+    "name": "function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 41,
+    "kind": "external",
+    "name": "Boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 42,
+    "kind": "external",
+    "name": "boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 43,
+    "kind": "external",
+    "name": "Symbol",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Symbol",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 44,
+    "kind": "external",
+    "name": "Error",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Error",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 45,
+    "kind": "external",
+    "name": "EvalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~EvalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 46,
+    "kind": "external",
+    "name": "InternalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~InternalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 47,
+    "kind": "external",
+    "name": "RangeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RangeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 48,
+    "kind": "external",
+    "name": "ReferenceError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ReferenceError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 49,
+    "kind": "external",
+    "name": "SyntaxError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~SyntaxError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 50,
+    "kind": "external",
+    "name": "TypeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~TypeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 51,
+    "kind": "external",
+    "name": "URIError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~URIError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 52,
+    "kind": "external",
+    "name": "Number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 53,
+    "kind": "external",
+    "name": "number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 54,
+    "kind": "external",
+    "name": "Date",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Date",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 55,
+    "kind": "external",
+    "name": "String",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~String",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 56,
+    "kind": "external",
+    "name": "string",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~string",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 57,
+    "kind": "external",
+    "name": "RegExp",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RegExp",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 58,
+    "kind": "external",
+    "name": "Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 59,
+    "kind": "external",
+    "name": "Int8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 60,
+    "kind": "external",
+    "name": "Uint8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 61,
+    "kind": "external",
+    "name": "Uint8ClampedArray",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8ClampedArray",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 62,
+    "kind": "external",
+    "name": "Int16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 63,
+    "kind": "external",
+    "name": "Uint16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 64,
+    "kind": "external",
+    "name": "Int32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 65,
+    "kind": "external",
+    "name": "Uint32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 66,
+    "kind": "external",
+    "name": "Float32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 67,
+    "kind": "external",
+    "name": "Float64Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float64Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 68,
+    "kind": "external",
+    "name": "Map",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Map",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 69,
+    "kind": "external",
+    "name": "Set",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Set",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 70,
+    "kind": "external",
+    "name": "WeakMap",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakMap",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 71,
+    "kind": "external",
+    "name": "WeakSet",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakSet",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 72,
+    "kind": "external",
+    "name": "ArrayBuffer",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ArrayBuffer",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 73,
+    "kind": "external",
+    "name": "DataView",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~DataView",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 74,
+    "kind": "external",
+    "name": "JSON",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~JSON",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 75,
+    "kind": "external",
+    "name": "Promise",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Promise",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 76,
+    "kind": "external",
+    "name": "Generator",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Generator",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 77,
+    "kind": "external",
+    "name": "GeneratorFunction",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~GeneratorFunction",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 78,
+    "kind": "external",
+    "name": "Reflect",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Reflect",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 79,
+    "kind": "external",
+    "name": "Proxy",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Proxy",
+    "access": null,
+    "description": "",
+    "lineNumber": 193,
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 81,
+    "kind": "external",
+    "name": "CanvasRenderingContext2D",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~CanvasRenderingContext2D",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 82,
+    "kind": "external",
+    "name": "DocumentFragment",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~DocumentFragment",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 83,
+    "kind": "external",
+    "name": "Element",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~Element",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 84,
+    "kind": "external",
+    "name": "Event",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~Event",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 85,
+    "kind": "external",
+    "name": "Node",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~Node",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 86,
+    "kind": "external",
+    "name": "NodeList",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~NodeList",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 87,
+    "kind": "external",
+    "name": "XMLHttpRequest",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~XMLHttpRequest",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 88,
+    "kind": "external",
+    "name": "AudioContext",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~AudioContext",
+    "access": null,
+    "description": "",
+    "lineNumber": 34,
+    "builtinExternal": true
+  }
+]

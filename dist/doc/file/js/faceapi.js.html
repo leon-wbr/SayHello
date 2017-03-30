@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">js/faceapi.js | SayHello API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/camera.js~Camera.html">Camera</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/faceapi.js~FaceAPI.html">FaceAPI</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">js/faceapi.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * Used for accessing Microsoft&apos;s Face API. Written for general use cases,
+ * not specifically for this application.
+ *
+ */
+export default class FaceAPI {
+  /**
+   * creates an instance of FaceAPI
+   *
+   * @param {string} key - API key
+   */
+  constructor(key) {
+    /** type {number} */
+    this.key = key;
+
+    // This is done because internally calling functions rebinds &quot;this&quot; wrongly.
+    this.makeRequest = this.makeRequest.bind(this);
+    //this.getPersonGroupOrCreate = this.getPersonGroupOrCreate.bind(this);
+    this.getPersonGroup = this.getPersonGroup.bind(this);
+    this.createPersonGroup = this.createPersonGroup.bind(this);
+  }
+
+  /** type {string} */
+  setKey(key) {
+    this.key = key;
+  }
+
+  /**
+   * makes a request to the API, used for simplifying.
+   *
+   * @param {string} endpoint - Endpoint to access in request
+   * @param {string} [method=&apos;GET&apos;] - Method to use for request, e.g. GET, POST, PUT, etc.
+   * @param {Object} [headers={ &apos;Ocp-Apim-Subscription-Key&apos;: this.key, &apos;Content-Type&apos;: &apos;application/json&apos;, Accept: &apos;application/json&apos; }] - Headers to send
+   * @param {boolean} [isImage] - If an image is in the body
+   * @return {Object} fetch request or error
+   */
+  makeRequest(endpoint, method = &apos;GET&apos;, body, headers) {
+    return fetch(`https://westus.api.cognitive.microsoft.com/face/v1.0/${endpoint}`, {
+      body: headers &amp;&amp; headers[&apos;Content-Type&apos;] === &apos;application/octet-stream&apos; ? body : JSON.stringify(body),
+      headers: Object.assign({ &apos;Ocp-Apim-Subscription-Key&apos;: this.key, &apos;Content-Type&apos;: &apos;application/json&apos;, Accept: &apos;application/json&apos; }, headers),
+      method,
+    }).then(response =&gt; response.text())
+      .then((response) =&gt; {
+        // Sometimes, the response body is empty, so response.json() fails. This
+        // prevents the error from happening by checking if response.text()
+        // returns something proper.
+        return response !== null ? JSON.parse(response) : {};
+      })
+      .then((response) =&gt; {
+        // Catching the error is halting other parts of the class, notably
+        // getPersonGroupOrCreate. So we just log it and continue.
+        if (response.error) console.error(response.error);
+
+        return response;
+      });
+  }
+
+  /**
+   * fetches a personGroup
+   *
+   * @param {number} personGroupId
+   * @return {Object} fetch request
+   */
+  getPersonGroup(personGroupId) {
+    return this.makeRequest(`persongroups/${personGroupId}`);
+  }
+
+  /**
+   * creates a personGroup with name identical to the id.
+   *
+   * @param {string} personGroupId
+   * @return {Object} fetch request
+   */
+  createPersonGroup(personGroupId) {
+    return this.makeRequest(`persongroups/${personGroupId}`, &apos;PUT&apos;, {
+      name: personGroupId,
+    }).then(response =&gt; ({
+      personGroupId,
+      name: personGroupId,
+      newlyCreated: true,
+      response,
+    }));
+  }
+
+  /**
+   * trains a personGroup
+   *
+   * @param {string} personGroupId
+   * @return {Object} fetch request
+   */
+  trainPersonGroup(personGroupId) {
+    return this.makeRequest(`persongroups/${personGroupId}/train`, &apos;POST&apos;);
+  }
+
+  /**
+   * checks if personGroup exists and if it doesn&apos;t, creates it.
+   *
+   * @param {string} personGroupId
+   * @return {Object} fetch request
+   */
+  getPersonGroupOrCreate(personGroupId) {
+    const { getPersonGroup, createPersonGroup } = this;
+
+    return getPersonGroup(personGroupId)
+      .then((response) =&gt; {
+        // If there was an error (i.e. the group couldn&apos;t be found), try creating it.
+        if (response.error) return createPersonGroup(personGroupId);
+
+        return response;
+      });
+  }
+
+  /**
+   * create a Person
+   *
+   * @param {string} personGroupId
+   * @param {string} name - Name to display
+   * @param {string} [userData] - Secret data
+   * @return {Object} fetch request
+   */
+  createPerson(personGroupId, name, userData) {
+    return this.makeRequest(`persongroups/${personGroupId}/persons`, &apos;POST&apos;, {
+      name,
+      userData,
+    }).then(response =&gt; ({
+      personId: response.personId,
+      persistedFaceIds: [],
+      name,
+      userData,
+    }));
+  }
+
+  /**
+   * deletes a person
+   *
+   * @param {string} personGroupId
+   * @param {string} personId
+   * @return {Object} fetch request
+   */
+  deletePerson(personGroupId, personId) {
+    return this.makeRequest(`persongroups/${personGroupId}/persons/${personId}`, &apos;DELETE&apos;);
+  }
+
+  /**
+   * add a PersonFace to a Person
+   *
+   * @param {string} personGroupId
+   * @param {string} personId
+   * @param {Object} image
+   * @param {Object} faceRectangle
+   * @return {Object} fetch request
+   */
+  addPersonFace(personGroupId, personId, image, faceRectangle) {
+    let faceDimensions;
+
+    if (faceRectangle) {
+      const { left, top, width, height } = faceRectangle;
+      faceDimensions = `?targetFace=${left},${top},${width},${height}`;
+    }
+
+    return this.makeRequest(`persongroups/${personGroupId}/persons/${personId}/persistedFaces${faceDimensions}`, &apos;POST&apos;, image, {
+      &apos;Content-Type&apos;: &apos;application/octet-stream&apos;,
+    });
+  }
+
+  /**
+   * lists all Persons of a PersonGroup
+   *
+   * @param {string} personGroupId
+   * @return {Object} fetch request
+   */
+  listPersons(personGroupId) {
+    return this.makeRequest(`persongroups/${personGroupId}/persons`);
+  }
+
+  /**
+   * detects faces in an image
+   *
+   * @param {blob} image
+   * @return {Object} fetch request
+   */
+  detect(image) {
+    let headers;
+
+    if (image &amp;&amp; !image.url) {
+      headers = {
+        &apos;Content-Type&apos;: &apos;application/octet-stream&apos;,
+      };
+    }
+
+    return this.makeRequest(&apos;detect?returnFaceId=true&amp;returnFaceAttributes=smile&apos;, &apos;POST&apos;, image, headers);
+  }
+
+  /**
+   * identifies persons from faceIds
+   *
+   * @param {string} personGroupId
+   * @param {string[]} faceIds
+   * @return {Object} fetch request
+   */
+  identify(personGroupId, faceIds) {
+    return this.makeRequest(&apos;identify&apos;, &apos;POST&apos;, {
+      personGroupId,
+      faceIds,
+    });
+  }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

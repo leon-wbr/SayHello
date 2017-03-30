@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SayHello - Microsoft Face API Demo</title>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Karla:400,700" rel="stylesheet">
+  <link href="css/main.min.css" rel="stylesheet"></head>
+  <body>
+    <div id="app">
+      <h1>SayHello</h1>
+      <p>To get started, please take a look at the settings (bottom of the page). Then just add a person in the list below the video feed, select them and click on a detected face to add it to the selected person. Once you've done that, click on "Train" so the API can identify you.</p>
+
+      <div class="videoContainer">
+        <video id="video"></video>
+        <div
+          class="faceOverlay"
+          v-for="(face, index) in detectedFaces"
+          @click="addFaceToPerson(face.faceRectangle)"
+          :style="{
+            left: face.faceRectangle.left - 15 + 'px',
+            top: face.faceRectangle.top - 20 + 'px',
+            width: face.faceRectangle.width + 30 + 'px',
+            height: face.faceRectangle.height + 40 + 'px',
+            borderColor: ['blue', 'green', 'red', 'yellow', 'white'][index]
+          }"
+        >
+          <div class="faceOverlay__Id" :style="{ backgroundColor: ['blue', 'green', 'red', 'yellow', 'white'][index] }">
+            {{ face.faceId }}
+          </div>
+          <div class="faceOverlay__Name" :style="{ color: ['blue', 'green', 'red', 'yellow', 'white'][index] }">
+            {{ face.identifiedAs ? face.identifiedAs : '???' }}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <input
+          :class="['trainButton', { error: errors.needTrain }]"
+          type="submit"
+          @click="trainPersonGroup"
+          value="Train"
+        />
+        <h2>Persons</h2>
+        <ul :class="['personList', { error: errors.noneSelected }]">
+          <li
+            v-for="(person, index) in personList"
+            @click="setSelectedPerson(index)"
+            :class="{ active: index === selectedPerson }">
+            <h3>{{ person.name }}</h3>
+            <div v-if="typeof person.smiling !== 'undefined'">
+              {{ person.smiling ? 'Hello!' : 'Please smile.' }}
+            </div>
+            <button @click="deletePerson(index)">Delete</button>
+          </li>
+
+          <li class="personList__NewPerson">
+            <h3>New person</h3>
+            <input ref="newPersonName" type="text" placeholder="Name" @keyup.enter="createPerson" />
+            <button @click="createPerson">Create</button>
+          </li>
+        </ul>
+      </div>
+      <div class="Settings">
+        <p>This example works much better if used with a proper (non-trial) API key. Changing the API key may require you to reload the page. Interval time only determines how long to wait until detecting and identifying again, it waits until the current run is done, so it's impacted by network speed, etc.</p>
+        <p>
+          <label>API key: <input v-model="config.key" @change="setApiKey" :class="{ error: errors.noKey }" /></label></br>
+          <label>Interval time (milliseconds): <input v-model="config.intervalSpeed" type="number" max="10000" min="250" /></label>
+        </p>
+        <p><a href="doc/index.html">Documentation</a></p>
+      </div>
+
+      <!-- This canvas element is hidden because it is only used to capture images. -->
+      <canvas id="canvas"></canvas>
+    </div>
+  <script type="text/javascript" src="js/main.min.js"></script></body>
+</html>
