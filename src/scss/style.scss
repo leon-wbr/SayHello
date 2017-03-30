@@ -1,0 +1,146 @@
+// Variables
+$background: #111;
+$font-color: #eee;
+$danger-color: #f00;
+$white: #fff;
+
+// Main styling
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+
+body {
+  background: $background;
+  box-sizing: border-box;
+  color: $font-color;
+  font-family: 'Karla', sans-serif;
+  margin: 0 auto;
+  max-width: 700px;
+  padding: 25px 0;
+  text-align: center;
+}
+
+a {
+  color: inherit;
+}
+
+h1 {
+  font-size: 3em;
+  margin: 25px;
+}
+
+h2 {
+  margin: 0;
+  text-align: left;
+}
+
+input,
+button {
+  font: inherit;
+  max-width: 100%;
+}
+
+.error {
+  border: 2px solid $danger-color;
+}
+
+// Button to train
+.trainButton {
+  float: right;
+}
+
+// Settings at the bottom of the page
+.Settings {
+  font-size: .8em;
+  opacity: .5;
+  text-align: left;
+}
+
+// VideoContainer basics, canvas is hidden
+.videoContainer {
+  border-radius: 5px;
+  display: inline-block;
+  margin: 25px auto;
+  overflow: hidden;
+  position: relative;
+}
+
+#canvas {
+  display: none;
+}
+
+// PersonList
+.personList {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  margin-bottom: 25px;
+  padding: 0;
+
+  > li {
+    cursor: pointer;
+    height: 150px;
+    padding: 15px;
+    position: relative;
+    width: 25%;
+
+    &.active {
+      background: rgba($white, .2);
+    }
+
+    button {
+      bottom: 15px;
+      position: absolute;
+      right: 15px;
+    }
+  }
+
+  &__NewPerson {
+    opacity: .5;
+    transition: opacity .5s;
+
+    input {
+      margin-bottom: 15px;
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// FaceOverlay
+.faceOverlay {
+  border: 5px solid $white;
+  cursor: pointer;
+  opacity: .7;
+  overflow: hidden;
+  position: absolute;
+
+  &__Name,
+  &__Id {
+    position: absolute;
+    transition: transform .5s;
+    width: 100%;
+  }
+
+  &__Name {
+    bottom: 0;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-top: 5px;
+  }
+
+  &__Id {
+    font-size: 0.8em;
+    padding-bottom: 5px;
+    top: 0;
+    transform: translateY(-100%);
+  }
+
+  &:hover > .faceOverlay__Id {
+    transform: translateY(0%);
+  }
+}

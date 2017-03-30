@@ -1,0 +1,12 @@
+{
+    "extends": "airbnb-base",
+    "plugins": [
+        "import"
+    ],
+    "globals": {
+        "document": true,
+        "navigator": true,
+        "fetch": true,
+        "localStorage": true
+    }
+}
