@@ -1,6 +1,6 @@
 # SayHello - Microsoft Face API Demo
 
-This is a project created for a competition to demonstrate the Microsoft Face API. The classes I created, Camera and FaceAPI, can be used in any JavaScript project.
+This is a project created for a competition to demonstrate the Microsoft Face API. The classes I created, Camera and FaceAPI, can be used in any JavaScript project. [Demo](https://leon-wbr.github.io/SayHello).
 
 ### Features
 
@@ -13,6 +13,8 @@ This is a project created for a competition to demonstrate the Microsoft Face AP
 The project was created using ES6, SCSS, Webpack (to transpile ES6 and SCSS) and ESDoc. I only used those to simplify the development, it could have just as well been done without these resources. I have not thoroughly tested compatibility, but it works in relatively up-to-date Google Chrome and Firefox.
 
 ## Getting started
+
+This is only if you want to set it up yourself. You can access a [demo online](https://leon-wbr.github.io/SayHello).
 
 Clone the repository, install node modules (`npm install`) and run `npm start`. You might need to install some of the modules globally as needed (trial & error, sorry, but I'm on a deadline! It's probably just webpack and esdoc). I was restricted to the free trial of Microsoft's cognitive services and I suspect it works much better with a paid version.
 
@@ -46,7 +48,7 @@ I created this for [IT-Talent's March competition](https://www.it-talents.de/foe
 
 ## API reference
 
-The documentation I created was done inline with ESDoc for simplicity, it's available [here on GitHub](leon-wbr.github.io/sayhello/doc). It's not great but it has 100% coverage.
+The documentation I created was done inline with ESDoc for simplicity, it's available [here on GitHub](https://leon-wbr.github.io/SayHello/doc). It's not great but it has 100% coverage.
 
 ## More information
 
