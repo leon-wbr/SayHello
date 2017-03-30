@@ -20,7 +20,7 @@ export default class FaceAPI {
     this.createPersonGroup = this.createPersonGroup.bind(this);
   }
 
-  /** type {number} */
+  /** type {string} */
   setKey(key) {
     this.key = key;
   }

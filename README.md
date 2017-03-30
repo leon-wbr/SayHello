@@ -14,7 +14,7 @@ The project was created using ES6, SCSS, Webpack (to transpile ES6 and SCSS) and
 
 ## Getting started
 
-Clone the repository, install node modules (`npm install`) and run `npm start`. You might need to install some of the modules globally as needed (trial & error, sorry, but I'm on a deadline!). I was restricted to the free trial of Microsoft's cognitive services and I suspect it works much better with a paid version.
+Clone the repository, install node modules (`npm install`) and run `npm start`. You might need to install some of the modules globally as needed (trial & error, sorry, but I'm on a deadline! It's probably just webpack and esdoc). I was restricted to the free trial of Microsoft's cognitive services and I suspect it works much better with a paid version.
 
 ## Using the FaceAPI class
 
