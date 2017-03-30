@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">js/main.js | SayHello API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/camera.js~Camera.html">Camera</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/faceapi.js~FaceAPI.html">FaceAPI</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">js/main.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Vue from &apos;vue&apos;;
+import Camera from &apos;./camera&apos;;
+import FaceAPI from &apos;./faceapi&apos;;
+
+/*
+ * This needs to be done so that the styles get compiled.
+ * Normally I&apos;d use more components, more layouts, etc. and with this you could
+ * very well separate concerns. It&apos;s somewhat useless here.
+ */
+import styles from &apos;../scss/style.scss&apos;;
+
+// Suppress linter errors
+let faceApi;
+let camera;
+
+/*
+ * I&apos;m using the Vue.js framework to dynamically update the front-end values and
+ * to utilize a simple templating engine.
+ *
+ * See index.html for the template. All components could be stored in separate
+ * files, but I didn&apos;t like the way that would have to be structured, so I
+ * didn&apos;t do it.
+ *
+ * &apos;el&apos; is the element used by it.
+ *
+ * &apos;data&apos; is like an application state. Changing it makes Vue update the
+ * corresponding fields in the HTML template.
+ *
+ * &apos;methods&apos; is an object of functions which can be executed, again, from the
+ * template.
+ */
+const app = new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    config: {
+      key: localStorage.getItem(&apos;api-key&apos;) || &apos;&apos;,
+      intervalSpeed: 6000, // the interval&apos;s cooldown in milliseconds
+    },
+    // Possible errors to display status in the front-end
+    errors: {
+      needTrain: false,
+      noneSelected: false,
+      noKey: false,
+    },
+    groupId: localStorage.getItem(&apos;person-group-id&apos;) || Math.round(Math.random() * 10000).toString(2).substring(0, 32), // TODO: Implement better generation method
+    personList: [], // persons in the personGroup
+    detectedFaces: [], // currently detected faces
+    selectedPerson: null, // currently selected person (for updating)
+  },
+  methods: {
+    // Changes the selected person by index
+    setSelectedPerson: (index) =&gt; {
+      app.errors.noneSelected = false;
+      app.selectedPerson = index;
+    },
+    // Creates a new person based on the front-end form and resets the form
+    createPerson: () =&gt; {
+      faceApi.createPerson(app.groupId, app.$refs.newPersonName.value, null)
+        .then(person =&gt; app.personList.push(person));
+
+      app.$refs.newPersonName.value = null;
+    },
+    // Deletes a person
+    deletePerson: (index) =&gt; {
+      faceApi.deletePerson(app.groupId, app.personList[index].personId);
+      app.personList.splice(index, 1);
+    },
+    // Trains the person group
+    trainPersonGroup: () =&gt; {
+      app.errors.needTrain = false;
+      faceApi.trainPersonGroup(app.groupId);
+    },
+    // Add a face to the selected person
+    addFaceToPerson: (faceRectangle) =&gt; {
+      if (app.selectedPerson === null) return app.errors.noneSelected = true;
+      app.errors.noneSelected = false;
+      app.errors.needTrain = true;
+
+      return camera.takeImage().toBlob(blob =&gt;
+        faceApi.addPersonFace(app.groupId, app.personList[app.selectedPerson].personId, blob, faceRectangle),
+      );
+    },
+    // Set the API key to the input&apos;s value
+    setApiKey: (e) =&gt; {
+      const key = e.target.value;
+
+      localStorage.setItem(&apos;api-key&apos;, key);
+      faceApi.setKey(key);
+
+      setupPersonGroup();
+    },
+  },
+});
+
+/**
+ * Initialize the FaceAPI class used for accessing Microsoft&apos;s API.
+ * Camera needs to be initialized after Vue.js because it otherwise hijacks the
+ * video element.
+ */
+faceApi = new FaceAPI(app.config.key);
+camera = new Camera();
+
+/**
+ * Checks whether the key is set.
+ * This is a very simple error handler, I would&apos;ve liked to expand it to also
+ * check for other errors.
+ */
+function checkKey() {
+  if (app.config.key.length &lt; 6) {
+    app.errors.noKey = true;
+    return false;
+  }
+
+  app.errors.noKey = false;
+  return true;
+}
+
+/**
+ * Here we&apos;re setting up the personGroup.
+ * I opted to use one personGroup for each user, as we don&apos;t need mulitple for
+ * the use case specified. We save the id in the localStorage for persistence.
+ * The FaceAPI does support multiple personGroups.
+ */
+function setupPersonGroup() {
+  if (!checkKey()) return;
+
+  faceApi.getPersonGroupOrCreate(app.groupId)
+    .then((group) =&gt; {
+      // If there was an error (most often incorrect api key, reset persons)
+      if (group.response &amp;&amp; group.response.error) {
+        app.personList = [];
+        return;
+      }
+
+      // save to localStorage
+      localStorage.setItem(&apos;person-group-id&apos;, app.groupId);
+
+      // If the group is not newly created, fetch all existing persons.
+      if (!group.newlyCreated) {
+        faceApi.listPersons(app.groupId)
+          .then((persons) =&gt; {
+            app.personList = persons;
+          });
+      }
+    });
+}
+
+setupPersonGroup();
+
+/**
+ * The function detectInImage runs every six seconds, as is restricted by the
+ * free rate limit (20 requests per minute, this function does two - detect and
+ * identify).
+ */
+setTimeout(function detectInImage() {
+  if (!checkKey()) {
+    setTimeout(detectInImage, app.config.intervalSpeed);
+    return;
+  }
+
+  // Take an image and convert it to a POSTable format (blob)
+  camera.takeImage().toBlob((blob) =&gt; {
+    // Send a request to the API to detect the faces
+    faceApi.detect(blob).then((resp) =&gt; {
+      if (resp.error) return [];
+
+      return resp;
+    }).then((faces) =&gt; {
+      // Identify faces in the detected faces.
+      faceApi.identify(app.groupId, faces.map(face =&gt; face.faceId))
+        .then((response) =&gt; {
+          // Reset every smiling variable. Smiling doubles as an &apos;isIdentified&apos; boolean.
+          app.personList.forEach((p, i) =&gt; delete app.personList[i].smiling);
+
+          // If there was an error, skip the assigning and return originally detected faces.
+          if (response.error) return faces;
+
+          // Assign the most likely person&apos;s name to the face for displaying
+          response.forEach((identifiedFace) =&gt; {
+            // If the API couldn&apos;t find anyone, return.
+            if (identifiedFace.candidates.length &lt; 1) return;
+
+            // Find the identified person and then the detected face
+            const personIndex = app.personList.findIndex(p =&gt;
+              p.personId === identifiedFace.candidates[0].personId);
+
+            const faceIndex = faces.findIndex(f =&gt;
+              f.faceId === identifiedFace.faceId);
+
+            const person = app.personList[personIndex];
+            const face = faces[faceIndex];
+
+            // If the person couldn&apos;t be found, it&apos;s likely because it has been
+            // deleted before and the API hasn&apos;t been retrained.
+            if (person) {
+              face.identifiedAs = person.name;
+              person.smiling = face.faceAttributes.smile;
+            } else {
+              face.identifiedAs = &apos;Error. Please train.&apos;;
+              app.errors.needTrain = true;
+            }
+          });
+
+          return faces;
+        }).then((detectedFaces) =&gt; {
+          // Finally, display these faces
+          app.detectedFaces = detectedFaces;
+          // Repeat after 6 seconds, see comment above the initial declaration
+          setTimeout(detectInImage, app.config.intervalSpeed);
+        });
+    });
+  });
+}, app.config.intervalSpeed);
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

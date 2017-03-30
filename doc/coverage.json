@@ -1,0 +1,17 @@
+{
+  "coverage": "100%",
+  "expectCount": 22,
+  "actualCount": 22,
+  "files": {
+    "js/camera.js": {
+      "expectCount": 7,
+      "actualCount": 7,
+      "undocumentLines": []
+    },
+    "js/faceapi.js": {
+      "expectCount": 15,
+      "actualCount": 15,
+      "undocumentLines": []
+    }
+  }
+}
